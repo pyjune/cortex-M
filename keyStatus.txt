@@ -1,0 +1,10 @@
+/* Private variables ---------------------------------------------------------*/
+#define JOG_NONE	0
+#define JOG_UP		1
+#define JOG_RIGHT	2
+#define JOG_DOWN	3
+#define JOG_LEFT	4
+#define JOG_CENTER 	5
+
+volatile int keyStatus;
+/* USER CODE END PV */
