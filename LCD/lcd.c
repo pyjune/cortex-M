@@ -110,3 +110,8 @@ void LCD_putCh(int data)
 	LCD_dataH(data);
 	LCD_dataL(data);
 }
+void LCD_clear(void)
+{
+	LCD_cmdH(0x01);
+	LCD_cmdL(0x01);
+}
