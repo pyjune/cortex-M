@@ -79,10 +79,22 @@ void LCD_init(void)
 	LCD_cmdH(0x02);
 	LCD_cmdL(0x02);
 }
+
+// row : 0 or 1, 0<=col<=15
 void LCD_setCursor(int col, int row)
 {
-
+	if(row==0)
+	{
+		LCD_cmdH(0x80|col); // Set DD Ram Address 0x80
+		LCD_cmdL(0x80|col);
+	}
+	else
+	{
+		LCD_cmdH(0x80|0x40|col);
+		LCD_cmdL(0x80|0x40|col);
+	}
 }
+
 void LCD_print(char *data)
 {
 
