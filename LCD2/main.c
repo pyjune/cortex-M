@@ -109,6 +109,7 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
+	   LCD_clear();
 	  LCD_setCursor(0, 0);
 	  LCD_print(menu[i]);
 	  LCD_setCursor(0, 1);
