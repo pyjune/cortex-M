@@ -97,7 +97,13 @@ void LCD_setCursor(int col, int row)
 
 void LCD_print(char *data)
 {
-
+	int i = 0;
+	while( data[i] != '\0')
+	{
+		LCD_dataH(data[i]);
+		LCD_dataL(data[i]);
+		i++;
+	}
 }
 void LCD_putCh(int data)
 {
