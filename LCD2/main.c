@@ -67,7 +67,8 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	char menu[][11] = {"Americano", "Latte", "Mocha", "Cappuccino"};
+	int i;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -91,7 +92,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   LCD_init();
-  LCD_setCursor(8, 0);
+/*  LCD_setCursor(8, 0);
   LCD_putCh('0');
   LCD_putCh('1');
   HAL_Delay(1000);
@@ -99,15 +100,25 @@ int main(void)
   LCD_setCursor(0, 1); // col=0, row=1
   LCD_putCh('A');
   LCD_putCh('B');
-  LCD_print("Hello!");
+  LCD_print("Hello!");*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  i = 0;
   while (1)
   {
   /* USER CODE END WHILE */
-
+	  LCD_setCursor(0, 0);
+	  LCD_print(menu[i]);
+	  LCD_setCursor(0, 1);
+	  if(i<3)
+		  LCD_print(menu[i+1]);
+	  else
+		  LCD_print(menu[0]);
+	  i++;
+	  i %= 4;
+	  HAL_Delay(1000);
   /* USER CODE BEGIN 3 */
 
   }
