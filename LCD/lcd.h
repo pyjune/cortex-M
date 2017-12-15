@@ -22,5 +22,6 @@
 void LCD_init(void);
 void LCD_setCursor(int col, int row);
 void LCD_print(char *data);
+void LCD_putCh(int data);
 
 #endif /* LCD_H_ */
