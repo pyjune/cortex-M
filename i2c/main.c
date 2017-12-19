@@ -68,6 +68,8 @@ uint8_t seg_c[] = {0x7f, 0xbf, 0xdf, 0xef, 0xf7, 0xfb};
 
 uint8_t txBuffer[3]; // txBuffer[0] : command
 uint8_t portConfig[] = {PCA9535_CONFIG, 0x00, 0x00};
+uint8_t segOff[] = {PCA9535_OUT0, 0xff, 0x00};
+uint8_t disp[6] = {1, 2, 3, 4, 5, 6};
 
 /* USER CODE END PV */
 
@@ -89,7 +91,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	int segIdx = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -126,7 +128,14 @@ int main(void)
   while (1)
   {
   /* USER CODE END WHILE */
-
+	  txBuffer[1] = seg_c[segIdx]; // bit7만 0인 값...
+	  txBuffer[2] = seg[disp[segIdx]];
+	  HAL_I2C_Master_Transmit(&hi2c2, PCA9535, txBuffer, 3, 10000);
+	  HAL_Delay(3);
+	  txBuffer[2] = 0x00;
+	  HAL_I2C_Master_Transmit(&hi2c2, PCA9535, txBuffer, 3, 10000);
+	  segIdx++;
+	  segIdx %= 6;
   /* USER CODE BEGIN 3 */
 
   }
