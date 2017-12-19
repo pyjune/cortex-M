@@ -60,7 +60,7 @@ uint8_t seg[] = {
 					0xfe	,
 					0xf6
 				};
-#define PCA9535			0x20
+#define PCA9535			0x40	// 0x20<<1 7-bit address+RW
 #define PCA9535_CONFIG	6
 #define PCA9535_OUT0	2	// SEG0~SEG5
 #define PCA9535_OUT1	3	// A~DP
@@ -113,13 +113,12 @@ int main(void)
   MX_I2C2_Init();
 
   /* USER CODE BEGIN 2 */
-  //__HAL_I2C_ENABLE(&hi2c2);
   txBuffer[0] = PCA9535_OUT0;
   txBuffer[1] = seg_c[0]; // bit7만 0인 값...
   txBuffer[2] = seg[0];
-  HAL_I2C_Master_Transmit(&hi2c2, (uint16_t)PCA9535, txBuffer, 3, 10000);
+  HAL_I2C_Master_Transmit(&hi2c2, PCA9535, txBuffer, 3, 10000);
 
-  HAL_I2C_Master_Transmit(&hi2c2, (uint16_t)PCA9535, portConfig, 3, 10000);
+  HAL_I2C_Master_Transmit(&hi2c2, PCA9535, portConfig, 3, 10000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
