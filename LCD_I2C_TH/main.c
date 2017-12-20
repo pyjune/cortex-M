@@ -128,11 +128,31 @@ int main(void)
 	  tDisp[dispIdx++] = tValue%100/10 + '0'; // 1도
 	  tDisp[dispIdx++] = '.';
 	  tDisp[dispIdx++] = tValue%10 + '0';
-
+	  tDisp[dispIdx] = '\0';
 	  LCD_setCursor(0, 0);
 	  LCD_print("        ");
 	  LCD_setCursor(0, 0);
 	  LCD_print(tDisp);
+	  HAL_Delay(1000);
+
+	  txBuf[0] = SHT20_RH;
+	  HAL_I2C_Master_Transmit(&hi2c2, SHT20, txBuf, 1, 1000);
+	  HAL_Delay(500);
+	  HAL_I2C_Master_Receive(&hi2c2, SHT20, rxBuf, 3, 1000);
+	  rhValue = (rxBuf[0]<<8)|rxBuf[1];
+	  rhValue = (rhValue*125.0/65536-6.0);
+	  dispIdx = 0;
+	  if(rhValue>=10) // 10% 이상
+	  {
+		  rhDisp[dispIdx++] = rhValue/10 + '0'; // 10도 단위 온도
+	  }
+	  rhDisp[dispIdx++] = rhValue%10 + '0'; // 1도
+	  rhDisp[dispIdx] = '\0';
+
+	  LCD_setCursor(0, 1);
+	  LCD_print("        ");
+	  LCD_setCursor(0, 1);
+	  LCD_print(rhDisp);
 	  HAL_Delay(1000);
 
   /* USER CODE END WHILE */
