@@ -53,8 +53,8 @@ I2C_HandleTypeDef hi2c2;
 #define SHT20_RH	0xf5
 int tValue;
 int rhValue;
-char tDisp[6];	// ex) -10.0
-char rhDisp[4];	// ex) 25
+char tDisp[10];	// ex) -10.0
+char rhDisp[10];	// ex) 25
 int dispIdx;
 uint8_t txBuf[3];
 uint8_t rxBuf[3];
@@ -128,6 +128,8 @@ int main(void)
 	  tDisp[dispIdx++] = tValue%100/10 + '0'; // 1도
 	  tDisp[dispIdx++] = '.';
 	  tDisp[dispIdx++] = tValue%10 + '0';
+	  tDisp[dispIdx++] = 0xdf;	// 도
+	  tDisp[dispIdx++] = 'C';	// C
 	  tDisp[dispIdx] = '\0';
 	  LCD_setCursor(0, 0);
 	  LCD_print("        ");
@@ -147,6 +149,7 @@ int main(void)
 		  rhDisp[dispIdx++] = rhValue/10 + '0'; // 10도 단위 온도
 	  }
 	  rhDisp[dispIdx++] = rhValue%10 + '0'; // 1도
+	  rhDisp[dispIdx++] = '%';
 	  rhDisp[dispIdx] = '\0';
 
 	  LCD_setCursor(0, 1);
