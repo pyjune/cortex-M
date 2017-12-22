@@ -40,7 +40,8 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "lcd.h"
+#include "string.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -53,6 +54,15 @@ UART_HandleTypeDef huart1;
 #define MOTOR_GPIO 	GPIOB
 #define MOTOR_P		GPIO_PIN_6
 #define MOTOR_N		GPIO_PIN_7
+
+#define KEY_NONE 	0
+#define KEY_UP		1
+#define KEY_RIGHT	2
+#define KEY_DOWN	3
+#define KEY_LEFT	4
+#define KEY_CENTER	5
+volatile int keyStatus;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -76,7 +86,9 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-
+	int motorState;
+	int duty = 49;
+	char disp[10];
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -101,17 +113,57 @@ int main(void)
   MX_TIM3_Init();
 
   /* USER CODE BEGIN 2 */
-  __HAL_TIM_ENABLE(&htim3); // PWM On
-  HAL_GPIO_WritePin(MOTOR_GPIO, MOTOR_P, GPIO_PIN_SET);
-  HAL_Delay(3000);
-  HAL_GPIO_WritePin(MOTOR_GPIO, MOTOR_P, GPIO_PIN_RESET);
-  __HAL_TIM_DISABLE(&htim3);
+  LCD_init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(keyStatus == KEY_UP)
+	  {
+		  if(duty<90)
+			 duty += 10;
+		  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, duty);
+		  keyStatus = KEY_NONE;
+		  itoa(duty, disp, 10);
+		  LCD_setCursor(0, 1);
+		  LCD_print("        ");
+		  LCD_setCursor(0, 1);
+		  LCD_print(disp);
+	  }
+	  if(keyStatus == KEY_DOWN)
+	  {
+		  if(duty>10)
+		  	 duty -= 10;
+		  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, duty);
+		  keyStatus = KEY_NONE;
+		  itoa(duty, disp, 10);
+		  LCD_setCursor(0, 1);
+		  LCD_print("        ");
+		  LCD_setCursor(0, 1);
+		  LCD_print(disp);
+	  }
+	  if(keyStatus == KEY_CENTER)
+	  {
+		  if(motorState == 0)
+		  {
+			  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1); // PWM On
+			  HAL_GPIO_WritePin(MOTOR_GPIO, MOTOR_P, GPIO_PIN_SET);
+			  motorState = 1;
+			  LCD_setCursor(0,0);
+			  LCD_print("Motor On ");
+		  }
+		  else
+		  {
+			  HAL_GPIO_WritePin(MOTOR_GPIO, MOTOR_P, GPIO_PIN_RESET);
+			  HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+  			  motorState = 0;
+  			  LCD_setCursor(0,0);
+  			  LCD_print("Motor Off");
+		  }
+		  keyStatus = KEY_NONE;
+	  }
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
