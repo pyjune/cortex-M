@@ -62,7 +62,8 @@ UART_HandleTypeDef huart1;
 #define KEY_LEFT	4
 #define KEY_CENTER	5
 volatile int keyStatus;
-
+volatile char rxBuf[50];
+volatile int rxComplete;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -114,12 +115,23 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   LCD_init();
+  __HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  if(rxComplete == 1)
+	  {
+		  duty = atoi(rxBuf);
+		  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_1, duty);
+		  rxComplete = 0;
+		  LCD_setCursor(0, 1);
+		  LCD_print("        ");
+		  LCD_setCursor(0, 1);
+		  LCD_print(rxBuf);
+	  }
 	  if(keyStatus == KEY_UP)
 	  {
 		  if(duty<90)
