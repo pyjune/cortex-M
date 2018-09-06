@@ -4,7 +4,7 @@
  *  Created on: 2017. 12. 14.
  *      Author: user
  */
-#include "main.h"
+
 #include "stm32f4xx_hal.h"
 #include "lcd.h"
 
